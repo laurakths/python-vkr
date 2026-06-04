@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang-key="pageTitle">О разработчике — Пайтон-компас</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>">
+    <style>
+        .about-wrapper {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+        }
+        .about-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 50%, rgba(255,255,255,0.08) 0%, transparent 50%);
+            animation: bgPulse 8s ease-in-out infinite alternate;
+        }
+        @keyframes bgPulse {
+            0% { opacity: 0.5; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.1); }
+        }
+        .about-bg-shape {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.15;
+            font-size: 120px;
+            z-index: 0;
+        }
+        .about-bg-shape:nth-child(1) { top: 5%; left: 8%; animation: floatSnake1 18s ease-in-out infinite; }
+        .about-bg-shape:nth-child(2) { top: 60%; left: 5%; animation: floatSnake2 22s ease-in-out infinite; }
+        .about-bg-shape:nth-child(3) { top: 15%; right: 10%; animation: floatCompass1 20s ease-in-out infinite; }
+        .about-bg-shape:nth-child(4) { bottom: 10%; right: 8%; animation: floatCompass2 16s ease-in-out infinite; }
+        .about-bg-shape:nth-child(5) { top: 40%; left: 50%; animation: floatSnake3 25s ease-in-out infinite; }
+        .about-bg-shape:nth-child(6) { top: 75%; left: 40%; animation: floatCompass3 19s ease-in-out infinite; }
+        .about-bg-shape:nth-child(7) { top: 8%; left: 45%; animation: floatSnake4 15s ease-in-out infinite; }
+        .about-bg-shape:nth-child(8) { bottom: 20%; left: 15%; animation: floatCompass4 23s ease-in-out infinite; }
+
+        @keyframes floatSnake1 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            25% { transform: translate(60px, -40px) rotate(10deg) scale(1.1); }
+            50% { transform: translate(30px, -80px) rotate(-5deg) scale(0.95); }
+            75% { transform: translate(-40px, -30px) rotate(8deg) scale(1.05); }
+        }
+        @keyframes floatSnake2 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(0.9); }
+            33% { transform: translate(-50px, -60px) rotate(-8deg) scale(1); }
+            66% { transform: translate(40px, -30px) rotate(5deg) scale(0.85); }
+        }
+        @keyframes floatSnake3 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(0.7); }
+            50% { transform: translate(-70px, 50px) rotate(12deg) scale(1.1); }
+        }
+        @keyframes floatSnake4 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(0.8); }
+            33% { transform: translate(80px, 30px) rotate(-6deg) scale(1.05); }
+            66% { transform: translate(20px, -50px) rotate(4deg) scale(0.9); }
+        }
+        @keyframes floatCompass1 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            25% { transform: translate(-40px, -50px) rotate(90deg) scale(1.15); }
+            50% { transform: translate(-80px, -20px) rotate(180deg) scale(0.9); }
+            75% { transform: translate(-30px, -70px) rotate(270deg) scale(1.05); }
+        }
+        @keyframes floatCompass2 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1.1); }
+            33% { transform: translate(50px, -40px) rotate(-120deg) scale(0.95); }
+            66% { transform: translate(-30px, -80px) rotate(-240deg) scale(1.1); }
+        }
+        @keyframes floatCompass3 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(0.85); }
+            50% { transform: translate(60px, 40px) rotate(180deg) scale(1); }
+        }
+        @keyframes floatCompass4 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(0.75); }
+            33% { transform: translate(-60px, 50px) rotate(90deg) scale(1.1); }
+            66% { transform: translate(40px, 70px) rotate(270deg) scale(0.85); }
+        }
+
+        .about-card {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 700px;
+            background: rgba(255, 255, 255, 0.95);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 40px rgba(102,126,234,0.3);
+            padding: 45px;
+            border: 1px solid rgba(255,255,255,0.3);
+            animation: cardEnter 0.6s ease-out;
+        }
+        @keyframes cardEnter {
+            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .about-icon {
+            font-size: 48px;
+            display: block;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .about-card h1 {
+            font-size: 24px;
+            color: #333;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .about-card p {
+            color: #444;
+            line-height: 1.8;
+            margin-bottom: 18px;
+            font-size: 15px;
+        }
+        .about-card a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .about-card a:hover {
+            text-decoration: underline;
+        }
+        .about-section {
+            margin-bottom: 28px;
+        }
+        .about-section h2 {
+            font-size: 18px;
+            color: #667eea;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .about-divider {
+            height: 1px;
+            background: #e0e0e0;
+            margin: 24px 0;
+        }
+        .about-thanks {
+            background: #f8f7ff;
+            border-radius: 12px;
+            padding: 18px 22px;
+            border-left: 4px solid #667eea;
+        }
+        .about-email {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #f8f7ff;
+            padding: 10px 18px;
+            border-radius: 10px;
+            margin-top: 4px;
+        }
+        .about-topbar {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .about-topbar .btn-back {
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            text-decoration: none;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            transition: all 0.3s;
+        }
+        .about-topbar .btn-back:hover {
+            background: rgba(255,255,255,0.35);
+        }
+        .about-topbar .lang-select {
+            padding: 8px 14px;
+            border-radius: 10px;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.15);
+            color: white;
+            font-size: 13px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+        }
+        .about-topbar .lang-select option {
+            color: #333;
+            background: white;
+        }
+        .about-card .btn-back {
+            background: #667eea;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            display: inline-block;
+            border: none;
+        }
+        .about-card .btn-back:hover {
+            background: #5a6fd6;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="about-wrapper">
+        <div class="about-topbar">
+            <a href="/" class="btn-back" data-lang-key="backHome">На главную</a>
+            <select class="lang-select" id="about-lang-select">
+                <option value="ru">Русский</option>
+                <option value="en">English</option>
+            </select>
+        </div>
+        <span class="about-bg-shape">🐍</span>
+        <span class="about-bg-shape">🐍</span>
+        <span class="about-bg-shape">🧭</span>
+        <span class="about-bg-shape">🧭</span>
+        <span class="about-bg-shape">🐍</span>
+        <span class="about-bg-shape">🧭</span>
+        <span class="about-bg-shape">🐍</span>
+        <span class="about-bg-shape">🧭</span>
+
+        <div class="about-card">
+            <span class="about-icon">🧭</span>
+            <h1 data-lang-key="aboutTitle">О разработчике</h1>
+
+            <div class="about-section">
+                <p data-lang-key="aboutGreeting">Здравствуйте!</p>
+                <p data-lang-key="aboutIntro">Главным разработчиком сайта «Пайтон-компас» является <strong>Самигуллина Лаура Эдуардовна</strong>, студентка <strong>Казанского (Приволжского) федерального университета</strong>, группы <strong>🎓 10.2-124</strong>.</p>
+                <p data-lang-key="aboutDesc">Данный сайт-тренажёр по языку Python был разработан в рамках выпускной квалификационной работы на тему: «Разработка онлайн-тренажера для изучения языка программирования Python».</p>
+            </div>
+
+            <div class="about-divider"></div>
+
+            <div class="about-section about-thanks">
+                <h2><span>🙏</span> <span data-lang-key="thanksTitle">Благодарность</span></h2>
+                <p data-lang-key="thanksText">Особая благодарность моему научному руководителю — <strong>Данилову Андрею Владимировичу</strong>, за ценные советы при проектировании сайта и структуры упражнений.</p>
+            </div>
+
+            <div class="about-divider"></div>
+
+            <div class="about-section">
+                <h2><span>📧</span> <span data-lang-key="contactsTitle">Контакты</span></h2>
+                <p data-lang-key="contactsText">По вопросам работы сайта или сотрудничества можно написать на почту:</p>
+                <div class="about-email">
+                    <span>📧</span>
+                    <a href="mailto:ebxtos@mail.ru">ebxtos@mail.ru</a>
+                </div>
+            </div>
+
+            <div class="about-divider"></div>
+
+            <p class="about-footer" data-lang-key="aboutFooter">Мы надеемся, что этот проект поможет вам уверенно сделать первые шаги в изучении Python. 🐍</p>
+
+            <div style="text-align:center; margin-top:24px;">
+                <a href="/" class="btn-back" data-lang-key="backHome">На главную</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const aboutTranslations = {
+            ru: {
+                siteTitle: "Пайтон-компас",
+                pageTitle: "О разработчике — Пайтон-компас",
+                backHome: "На главную",
+                aboutTitle: "О разработчике",
+                aboutGreeting: "Здравствуйте!",
+                aboutIntro: 'Главным разработчиком сайта «Пайтон-компас» является <strong>Самигуллина Лаура Эдуардовна</strong>, студентка <strong>Казанского (Приволжского) федерального университета</strong>, группы <strong>🎓 10.2-124</strong>.',
+                aboutDesc: 'Данный сайт-тренажёр по языку Python был разработан в рамках выпускной квалификационной работы на тему: «Разработка онлайн-тренажера для изучения языка программирования Python».',
+                thanksTitle: "Благодарность",
+                thanksText: 'Особая благодарность моему научному руководителю — <strong>Данилову Андрею Владимировичу</strong>, за ценные советы при проектировании сайта и структуры упражнений.',
+                contactsTitle: "Контакты",
+                contactsText: "По вопросам работы сайта или сотрудничества можно написать на почту:",
+                aboutFooter: "Мы надеемся, что этот проект поможет вам уверенно сделать первые шаги в изучении Python. 🐍"
+            },
+            en: {
+                siteTitle: "PythonCompass",
+                pageTitle: "About — PythonCompass",
+                backHome: "Home",
+                aboutTitle: "About the Developer",
+                aboutGreeting: "Hello!",
+                aboutIntro: 'The main developer of "PythonCompass" is <strong>Laura Samigullina</strong>, a student of <strong>Kazan (Volga region) Federal University</strong>, group <strong>🎓 10.2-124</strong>.',
+                aboutDesc: 'This Python training website was developed as part of a final qualification work on the topic: "Development of an online trainer for learning the Python programming language".',
+                thanksTitle: "Acknowledgments",
+                thanksText: 'Special thanks to my scientific advisor — <strong>Andrey Danilov</strong>, for valuable advice in designing the website and exercise structure.',
+                contactsTitle: "Contacts",
+                contactsText: "For questions about the website or collaboration, write to:",
+                aboutFooter: "We hope this project will help you confidently take your first steps in learning Python. 🐍"
+            }
+        };
+
+        let currentLang = localStorage.getItem('lang') || 'ru';
+
+        function applyAboutLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            const t = aboutTranslations[lang];
+            document.querySelectorAll('[data-lang-key]').forEach(el => {
+                const key = el.getAttribute('data-lang-key');
+                if (t[key]) {
+                    if (key === 'aboutIntro' || key === 'thanksText' || key === 'aboutDesc' || key === 'aboutFooter' || key === 'contactsText' || key === 'aboutGreeting') {
+                        el.innerHTML = t[key];
+                    } else {
+                        el.textContent = t[key];
+                    }
+                }
+            });
+            document.title = t.pageTitle;
+        }
+
+        document.getElementById('about-lang-select').value = currentLang;
+        document.getElementById('about-lang-select').addEventListener('change', (e) => {
+            applyAboutLanguage(e.target.value);
+        });
+
+        applyAboutLanguage(currentLang);
+    </script>
+</body>
+</html>

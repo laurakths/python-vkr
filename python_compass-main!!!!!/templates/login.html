@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang-key="pageTitle">Вход — Пайтон-компас</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>">
+    <style>
+        .auth-wrapper {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+        }
+        .auth-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 50%, rgba(255,255,255,0.08) 0%, transparent 50%);
+            animation: bgPulse 8s ease-in-out infinite alternate;
+        }
+        @keyframes bgPulse {
+            0% { opacity: 0.5; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.1); }
+        }
+        .auth-bg-shape {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.15;
+            font-size: 120px;
+            z-index: 0;
+        }
+        .auth-bg-shape:nth-child(1) { top: 5%; left: 8%; animation: floatSnake1 18s ease-in-out infinite; }
+        .auth-bg-shape:nth-child(2) { top: 60%; left: 5%; animation: floatSnake2 22s ease-in-out infinite; }
+        .auth-bg-shape:nth-child(3) { top: 15%; right: 10%; animation: floatCompass1 20s ease-in-out infinite; }
+        .auth-bg-shape:nth-child(4) { bottom: 10%; right: 8%; animation: floatCompass2 16s ease-in-out infinite; }
+        .auth-bg-shape:nth-child(5) { top: 40%; left: 50%; animation: floatSnake3 25s ease-in-out infinite; }
+        .auth-bg-shape:nth-child(6) { top: 75%; left: 40%; animation: floatCompass3 19s ease-in-out infinite; }
+        .auth-bg-shape:nth-child(7) { top: 8%; left: 45%; animation: floatSnake4 15s ease-in-out infinite; }
+        .auth-bg-shape:nth-child(8) { bottom: 20%; left: 15%; animation: floatCompass4 23s ease-in-out infinite; }
+
+        @keyframes floatSnake1 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            25% { transform: translate(60px, -40px) rotate(10deg) scale(1.1); }
+            50% { transform: translate(30px, -80px) rotate(-5deg) scale(0.95); }
+            75% { transform: translate(-40px, -30px) rotate(8deg) scale(1.05); }
+        }
+        @keyframes floatSnake2 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(0.9); }
+            33% { transform: translate(-50px, -60px) rotate(-8deg) scale(1); }
+            66% { transform: translate(40px, -30px) rotate(5deg) scale(0.85); }
+        }
+        @keyframes floatSnake3 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(0.7); }
+            50% { transform: translate(-70px, 50px) rotate(12deg) scale(1.1); }
+        }
+        @keyframes floatSnake4 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(0.8); }
+            33% { transform: translate(80px, 30px) rotate(-6deg) scale(1.05); }
+            66% { transform: translate(20px, -50px) rotate(4deg) scale(0.9); }
+        }
+        @keyframes floatCompass1 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            25% { transform: translate(-40px, -50px) rotate(90deg) scale(1.15); }
+            50% { transform: translate(-80px, -20px) rotate(180deg) scale(0.9); }
+            75% { transform: translate(-30px, -70px) rotate(270deg) scale(1.05); }
+        }
+        @keyframes floatCompass2 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1.1); }
+            33% { transform: translate(50px, -40px) rotate(-120deg) scale(0.95); }
+            66% { transform: translate(-30px, -80px) rotate(-240deg) scale(1.1); }
+        }
+        @keyframes floatCompass3 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(0.85); }
+            50% { transform: translate(60px, 40px) rotate(180deg) scale(1); }
+        }
+        @keyframes floatCompass4 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(0.75); }
+            33% { transform: translate(-60px, 50px) rotate(90deg) scale(1.1); }
+            66% { transform: translate(40px, 70px) rotate(270deg) scale(0.85); }
+        }
+
+        .auth-card {
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.95);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 40px rgba(102,126,234,0.3);
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            border: 1px solid rgba(255,255,255,0.3);
+            animation: cardEnter 0.6s ease-out;
+        }
+        @keyframes cardEnter {
+            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .auth-logo .logo {
+            font-size: 48px;
+        }
+        .auth-logo h1 {
+            color: var(--text);
+            margin-top: 10px;
+            font-size: 24px;
+        }
+        .auth-lang {
+            text-align: right;
+            margin-bottom: 10px;
+        }
+        .auth-lang select {
+            padding: 6px 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            background: var(--card-bg);
+            color: var(--text);
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border);
+        }
+        .auth-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .auth-tab.active {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+            margin-bottom: -2px;
+        }
+        .auth-form {
+            display: none;
+        }
+        .auth-form.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text);
+            font-weight: 500;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px;
+            background: var(--bg-light);
+            color: var(--text);
+            transition: all 0.3s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+        }
+        .btn-auth {
+            width: 100%;
+            padding: 14px;
+            background: var(--btn-bg);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-auth:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+        .btn-auth:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .error-message {
+            background: rgba(255, 118, 117, 0.1);
+            border: 1px solid var(--error);
+            color: var(--error);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .error-message.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-wrapper">
+        <div class="auth-bg-shape">🐍</div>
+        <div class="auth-bg-shape">🐍</div>
+        <div class="auth-bg-shape">🧭</div>
+        <div class="auth-bg-shape">🧭</div>
+        <div class="auth-bg-shape">🐍</div>
+        <div class="auth-bg-shape">🧭</div>
+        <div class="auth-bg-shape">🐍</div>
+        <div class="auth-bg-shape">🧭</div>
+        <div class="auth-card">
+            <div class="auth-lang">
+                <select id="lang-select">
+                    <option value="ru">Русский</option>
+                    <option value="en">English</option>
+                </select>
+            </div>
+            <div class="auth-logo">
+                <span class="logo">🧭</span>
+                <h1 data-lang-key="siteTitle">Пайтон-компас</h1>
+            </div>
+            
+            <div class="auth-tabs">
+                <div class="auth-tab active" data-tab="login" data-lang-key="loginTab">Вход</div>
+                <div class="auth-tab" data-tab="register" data-lang-key="registerTab">Регистрация</div>
+            </div>
+            
+            <div class="error-message" id="error-message"></div>
+            
+            <form class="auth-form active" id="login-form">
+                <div class="form-group">
+                    <label for="login-email" data-lang-key="emailLabel">Email</label>
+                    <input type="email" id="login-email" required placeholder="example@mail.ru">
+                </div>
+                <div class="form-group">
+                    <label for="login-password" data-lang-key="passwordLabel">Пароль</label>
+                    <input type="password" id="login-password" required data-lang-placeholder="passwordPlaceholder" placeholder="Введите пароль">
+                </div>
+                <button type="submit" class="btn-auth" data-lang-key="loginBtn">Войти</button>
+            </form>
+            
+            <form class="auth-form" id="register-form">
+                <div class="form-group">
+                    <label for="reg-name" data-lang-key="nameLabel">Имя</label>
+                    <input type="text" id="reg-name" required data-lang-placeholder="namePlaceholder" placeholder="Иван">
+                </div>
+                <div class="form-group">
+                    <label for="reg-surname" data-lang-key="surnameLabel">Фамилия</label>
+                    <input type="text" id="reg-surname" required data-lang-placeholder="surnamePlaceholder" placeholder="Петров">
+                </div>
+                <div class="form-group">
+                    <label for="reg-class" data-lang-key="classLabel">Класс (необязательно)</label>
+                    <input type="text" id="reg-class" data-lang-placeholder="classPlaceholder" placeholder="10А">
+                </div>
+                <div class="form-group">
+                    <label for="reg-email" data-lang-key="emailLabel">Email</label>
+                    <input type="email" id="reg-email" required placeholder="example@mail.ru">
+                </div>
+                <div class="form-group">
+                    <label for="reg-password" data-lang-key="passwordLabel">Пароль</label>
+                    <input type="password" id="reg-password" required data-lang-placeholder="regPasswordPlaceholder" placeholder="Придумайте пароль">
+                </div>
+                <button type="submit" class="btn-auth" data-lang-key="registerBtn">Зарегистрироваться</button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        const authTranslations = {
+            ru: {
+                siteTitle: "Пайтон-компас",
+                pageTitle: "Вход — Пайтон-компас",
+                loginTab: "Вход",
+                registerTab: "Регистрация",
+                emailLabel: "Email",
+                passwordLabel: "Пароль",
+                passwordPlaceholder: "Введите пароль",
+                loginBtn: "Войти",
+                nameLabel: "Имя",
+                surnameLabel: "Фамилия",
+                classLabel: "Класс (необязательно)",
+                namePlaceholder: "Иван",
+                surnamePlaceholder: "Петров",
+                classPlaceholder: "10А",
+                regPasswordPlaceholder: "Придумайте пароль",
+                registerBtn: "Зарегистрироваться",
+                errorLogin: "Ошибка входа"
+            },
+            en: {
+                siteTitle: "PythonCompass",
+                pageTitle: "Login — PythonCompass",
+                loginTab: "Login",
+                registerTab: "Register",
+                emailLabel: "Email",
+                passwordLabel: "Password",
+                passwordPlaceholder: "Enter password",
+                loginBtn: "Sign In",
+                nameLabel: "First Name",
+                surnameLabel: "Last Name",
+                classLabel: "Class (optional)",
+                namePlaceholder: "John",
+                surnamePlaceholder: "Doe",
+                classPlaceholder: "10A",
+                regPasswordPlaceholder: "Create a password",
+                registerBtn: "Sign Up",
+                errorLogin: "Login error"
+            }
+        };
+
+        let currentLang = localStorage.getItem('lang') || 'ru';
+
+        function applyAuthLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            const t = authTranslations[lang];
+            
+            document.title = t.pageTitle;
+            
+            document.querySelectorAll('[data-lang-key]').forEach(el => {
+                const key = el.getAttribute('data-lang-key');
+                if (t[key]) {
+                    el.textContent = t[key];
+                }
+            });
+            
+            document.querySelectorAll('[data-lang-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-lang-placeholder');
+                if (t[key]) {
+                    el.placeholder = t[key];
+                }
+            });
+        }
+
+        document.getElementById('lang-select').value = currentLang;
+        
+        document.getElementById('lang-select').addEventListener('change', (e) => {
+            applyAuthLanguage(e.target.value);
+        });
+
+        const tabs = document.querySelectorAll('.auth-tab');
+        const forms = document.querySelectorAll('.auth-form');
+        const errorDiv = document.getElementById('error-message');
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabName = tab.dataset.tab;
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                forms.forEach(f => f.classList.remove('active'));
+                document.getElementById(tabName + '-form').classList.add('active');
+                errorDiv.classList.remove('show');
+            });
+        });
+        
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            const response = await fetch('/login_post', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({email, password})
+            });
+            
+            const data = await response.json();
+            if (data.success) {
+                window.location.href = '/';
+            } else {
+                errorDiv.textContent = data.error;
+                errorDiv.classList.add('show');
+            }
+        });
+        
+        document.getElementById('register-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value;
+            const surname = document.getElementById('reg-surname').value;
+            const class_name = document.getElementById('reg-class').value;
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-password').value;
+            
+            const response = await fetch('/register', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({name, surname, class_name, email, password})
+            });
+            
+            const data = await response.json();
+            if (data.success) {
+                window.location.href = '/';
+            } else {
+                errorDiv.textContent = data.error;
+                errorDiv.classList.add('show');
+            }
+        });
+
+        applyAuthLanguage(currentLang);
+    </script>
+</body>
+</html>
