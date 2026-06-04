@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Пайтон-компас — Изучай Python с нейросетью</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>">
+</head>
+<body>
+    <span class="candy-float">🍬</span>
+    <span class="candy-float">🍭</span>
+    <span class="candy-float">🍫</span>
+    <span class="candy-float">🍩</span>
+    <span class="candy-float">🎀</span>
+    <span class="candy-float">🍪</span>
+    <span class="candy-float">🧁</span>
+    <span class="candy-float">🍬</span>
+    <span class="candy-float">🍭</span>
+    <span class="candy-float">🍫</span>
+    <span class="cosmic-float">⭐</span>
+    <span class="cosmic-float">✨</span>
+    <span class="cosmic-float">🪐</span>
+    <span class="cosmic-float">🌙</span>
+    <span class="cosmic-float">☄️</span>
+    <span class="cosmic-float">🌍</span>
+    <span class="cosmic-float">🌟</span>
+    <span class="cosmic-float">🌠</span>
+    <span class="cosmic-float">🛸</span>
+    <span class="cosmic-float">🚀</span>
+    <span class="cyber-float">0</span>
+    <span class="cyber-float">1</span>
+    <span class="cyber-float">⎈</span>
+    <span class="cyber-float">⚡</span>
+    <span class="cyber-float">⧩</span>
+    <span class="cyber-float">⬡</span>
+    <span class="cyber-float">◆</span>
+    <span class="cyber-float">▣</span>
+    <span class="cyber-float">⬛</span>
+    <span class="cyber-float">⊞</span>
+    <span class="cyber-float">⧫</span>
+    <span class="cyber-float">▰</span>
+    <span class="cyber-float">▒</span>
+    <span class="cyber-float">▓</span>
+    <span class="cyber-float">█</span>
+    <span class="cyber-float">▀</span>
+    <span class="cyber-float">▄</span>
+    <span class="cyber-float">⏣</span>
+    <span class="cyber-float">⟁</span>
+    <span class="cyber-float">⧊</span>
+    <span class="cyber-float">🔲</span>
+    <span class="cyber-float">🔳</span>
+    <span class="cyber-float">◈</span>
+    <span class="cyber-float">▤</span>
+    <span class="cyber-float">⛭</span>
+    <span class="cat-float">🐱</span>
+    <span class="cat-float">😺</span>
+    <span class="cat-float">🐈</span>
+    <span class="cat-float">🌸</span>
+    <span class="cat-float">🐱</span>
+    <span class="cat-float">🎀</span>
+    <span class="cat-float">😸</span>
+    <span class="cat-float">🐈⬛</span>
+    <span class="cat-float">🌺</span>
+    <span class="cat-float">😻</span>
+    <span class="cat-float">🐾</span>
+    <span class="cat-float">😹</span>
+    <span class="cat-float">🌷</span>
+    <span class="cat-float">🐱</span>
+    <span class="cat-float">😺</span>
+    <header>
+        <div class="container header-content">
+            <h1 class="site-title">
+                <span class="logo">🧭</span>
+                <span data-lang-key="siteTitle">Пайтон-компас</span>
+            </h1>
+            <div class="header-controls">
+                <div class="user-info" id="user-info" style="display: none;">
+                    <span class="user-greeting" id="user-greeting"></span>
+                    <a href="/profile" class="btn-profile" id="btn-profile" data-lang-key="profile">Личный кабинет</a>
+                    <a href="/logout" class="btn-logout" id="btn-logout" data-lang-key="logout">Выйти</a>
+                </div>
+                <select class="lang-select" id="lang-select">
+                    <option value="ru">Русский</option>
+                    <option value="en">English</option>
+                </select>
+                <select class="theme-select" id="theme-select">
+                    <option value="classic">Классическая</option>
+                    <option value="cosmic">Космос</option>
+                    <option value="candy">Конфеты</option>
+                    <option value="cyber">Киберпанк</option>
+                    <option value="cat">Котики</option>
+                </select>
+                <a href="/about" class="btn-about" id="btn-about" data-lang-key="about">О разработчике</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <aside class="sidebar">
+            <h2 data-lang-key="contents">Оглавление</h2>
+            <nav id="toc">
+                <ul id="chapter-list">
+                </ul>
+            </nav>
+        </aside>
+
+        <section class="content">
+            <div class="theory-panel">
+                <div id="theory-content">
+                </div>
+                <button id="get-task-btn" class="btn btn-primary" style="display:none;">
+                    <span data-lang-key="getTask">Получить задачу</span>
+                </button>
+            </div>
+
+            <div class="practice-panel" id="practice-panel" style="display:none;">
+                <div class="task-block">
+                    <h3 data-lang-key="task">Задание</h3>
+                    <div id="task-text" class="task-text">
+                        <p class="placeholder" data-lang-key="taskPlaceholder">Выберите тему и нажмите "Получить задачу"</p>
+                    </div>
+                </div>
+
+                <div class="editor-block">
+                    <h3 data-lang-key="editor">Редактор кода</h3>
+                    <div class="editor-container">
+                        <div class="line-numbers" id="line-numbers"><span>1</span></div>
+                        <textarea id="code-editor" placeholder="# Write your code here" spellcheck="false"></textarea>
+                    </div>
+                    <div class="input-block" id="input-block">
+                        <h4 data-lang-key="inputTitle">Ввод данных</h4>
+                        <textarea id="input-data" class="input-data" placeholder="..." spellcheck="false"></textarea>
+                    </div>
+                    <div class="output-block" id="output-block" style="display:none;">
+                        <h4 data-lang-key="outputTitle">Вывод программы</h4>
+                        <pre id="output-content" class="output-content"></pre>
+                    </div>
+                    <div class="editor-actions">
+                        <button id="run-code-btn" class="btn btn-run">
+                            <span class="btn-icon">▶</span> <span data-lang-key="run">Выполнить</span>
+                        </button>
+                        <button id="check-btn" class="btn btn-primary">
+                            <span class="btn-icon">✓</span> <span data-lang-key="check">Проверить с ИИ</span>
+                        </button>
+                        <button id="clear-btn" class="btn btn-secondary" data-lang-key="clear">Очистить</button>
+                    </div>
+                </div>
+
+                <div class="feedback-block" id="feedback-block">
+                    <h3 data-lang-key="result">Результат</h3>
+                    <div id="feedback" class="feedback">
+                        <p class="placeholder" data-lang-key="feedbackPlaceholder">Здесь появится результат проверки</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p><span data-lang-key="footerText">Пайтон-компас</span> — <span data-lang-key="footer">изучай Python и практикуйся!</span></p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.0/marked.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}?v=3"></script>
+</body>
+</html>

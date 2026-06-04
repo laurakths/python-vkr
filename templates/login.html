@@ -1,0 +1,102 @@
+<script>
+    let currentLang = localStorage.getItem('lang') || 'ru';
+    
+    async function register() {
+        const name = document.getElementById('reg-name').value;
+        const surname = document.getElementById('reg-surname').value;
+        const class_name = document.getElementById('reg-class').value;
+        const email = document.getElementById('reg-email').value;
+        const password = document.getElementById('reg-password').value;
+        
+        const response = await fetch('/api/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, surname, class_name, email, password })
+        });
+        
+        const data = await response.json();
+        if (data.success) {
+            localStorage.setItem('authToken', data.token);
+            window.location.href = '/';
+        } else {
+            document.getElementById('error-message').textContent = data.error;
+            document.getElementById('error-message').classList.add('show');
+        }
+    }
+    
+    async function login() {
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        
+        const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+        
+        const data = await response.json();
+        if (data.success) {
+            localStorage.setItem('authToken', data.token);
+            localStorage.setItem('userName', data.name);
+            window.location.href = '/';
+        } else {
+            document.getElementById('error-message').textContent = data.error;
+            document.getElementById('error-message').classList.add('show');
+        }
+    }
+    
+    function applyAuthLanguage(lang) {
+        const t = {
+            ru: {
+                siteTitle: "Пайтон-компас",
+                loginTab: "Вход",
+                registerTab: "Регистрация",
+                emailLabel: "Email",
+                passwordLabel: "Пароль",
+                loginBtn: "Войти",
+                nameLabel: "Имя",
+                surnameLabel: "Фамилия",
+                classLabel: "Класс (необязательно)",
+                registerBtn: "Зарегистрироваться"
+            },
+            en: {
+                siteTitle: "PythonCompass",
+                loginTab: "Login",
+                registerTab: "Register",
+                emailLabel: "Email",
+                passwordLabel: "Password",
+                loginBtn: "Sign In",
+                nameLabel: "First Name",
+                surnameLabel: "Last Name",
+                classLabel: "Class (optional)",
+                registerBtn: "Sign Up"
+            }
+        };
+        
+        document.querySelectorAll('[data-lang-key]').forEach(el => {
+            const key = el.getAttribute('data-lang-key');
+            if (t[lang][key]) el.textContent = t[lang][key];
+        });
+        
+        document.title = t[lang].siteTitle;
+    }
+    
+    document.getElementById('login-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        login();
+    });
+    
+    document.getElementById('register-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        register();
+    });
+    
+    document.getElementById('lang-select').value = currentLang;
+    document.getElementById('lang-select').addEventListener('change', (e) => {
+        currentLang = e.target.value;
+        localStorage.setItem('lang', currentLang);
+        applyAuthLanguage(currentLang);
+    });
+    
+    applyAuthLanguage(currentLang);
+</script> 

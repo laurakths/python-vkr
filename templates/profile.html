@@ -1,0 +1,109 @@
+<script>
+    const token = localStorage.getItem('authToken');
+    
+    if (!token) {
+        window.location.href = '/login';
+    }
+    
+    let currentLang = localStorage.getItem('lang') || 'ru';
+    
+    async function loadUserData() {
+        const response = await fetch('/api/user', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            document.getElementById('user-email').textContent = data.email;
+            document.getElementById('user-name').textContent = data.name;
+            document.getElementById('user-surname').textContent = data.surname;
+            document.getElementById('user-class').textContent = data.class_name || '—';
+            document.getElementById('edit-name').value = data.name;
+            document.getElementById('edit-surname').value = data.surname;
+            document.getElementById('edit-class').value = data.class_name || '';
+        } else {
+            localStorage.removeItem('authToken');
+            window.location.href = '/login';
+        }
+    }
+    
+    async function updateProfile() {
+        const name = document.getElementById('edit-name').value;
+        const surname = document.getElementById('edit-surname').value;
+        const class_name = document.getElementById('edit-class').value;
+        
+        const response = await fetch('/api/update_profile', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ name, surname, class_name })
+        });
+        
+        if (response.ok) {
+            document.getElementById('success-message').classList.add('show');
+            setTimeout(() => {
+                document.getElementById('success-message').classList.remove('show');
+            }, 3000);
+            loadUserData();
+        }
+    }
+    
+    function applyProfileLanguage(lang) {
+        const t = {
+            ru: {
+                title: "Личный кабинет",
+                logout: "Выйти",
+                backHome: "На главную",
+                successMessage: "Данные успешно сохранены!",
+                email: "Email",
+                name: "Имя",
+                surname: "Фамилия",
+                classLabel: "Класс",
+                editTitle: "Редактировать данные",
+                nameLabel: "Имя",
+                surnameLabel: "Фамилия",
+                classLabelInput: "Класс",
+                emailLabel: "Email (нельзя изменить)",
+                save: "Сохранить"
+            },
+            en: {
+                title: "Profile",
+                logout: "Logout",
+                backHome: "Home",
+                successMessage: "Data saved successfully!",
+                email: "Email",
+                name: "Name",
+                surname: "Surname",
+                classLabel: "Class",
+                editTitle: "Edit data",
+                nameLabel: "Name",
+                surnameLabel: "Surname",
+                classLabelInput: "Class",
+                emailLabel: "Email (cannot be changed)",
+                save: "Save"
+            }
+        };
+        
+        document.querySelectorAll('[data-lang-key]').forEach(el => {
+            const key = el.getAttribute('data-lang-key');
+            if (t[lang][key]) el.textContent = t[lang][key];
+        });
+    }
+    
+    document.getElementById('profile-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        updateProfile();
+    });
+    
+    document.getElementById('lang-select').value = currentLang;
+    document.getElementById('lang-select').addEventListener('change', (e) => {
+        currentLang = e.target.value;
+        localStorage.setItem('lang', currentLang);
+        applyProfileLanguage(currentLang);
+    });
+    
+    loadUserData();
+    applyProfileLanguage(currentLang);
+</script> 
